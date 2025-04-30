@@ -24,25 +24,24 @@
       text-align: center;
     }
 
-    select {
+    select, button {
       padding: 10px;
       width: 320px;
-      border: 2px solid #007BFF;
       border-radius: 8px;
-      margin-top: 10px;
+      margin: 10px;
       font-size: 1em;
+    }
+
+    select {
+      border: 2px solid #007BFF;
       outline: none;
     }
 
     button {
-      margin: 10px 5px;
-      padding: 10px 20px;
-      font-size: 1em;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
       background-color: #007BFF;
       color: white;
+      cursor: pointer;
       transition: background 0.3s, transform 0.3s;
     }
 
@@ -57,11 +56,6 @@
       font-weight: bold;
     }
 
-    h3 {
-      margin-top: 30px;
-      color: #333;
-    }
-
     #loader {
       display: none;
       border: 8px solid #f3f3f3;
@@ -74,7 +68,7 @@
     }
 
     #downloadBtn {
-      display: none; /* Initially hidden */
+      display: none;
       margin-top: 15px;
     }
 
@@ -97,115 +91,122 @@
 </head>
 <body>
 
-  <h2>Select Your Register Number to Access the <span style="color: blue;">ML Assignment-I</span></h2>
+<h2>Select Your Register Number to Access the <span style="color: blue;">ML Assignment-II</span></h2>
 
-  <select id="registerNumber">
-    <option value="" disabled selected>Select your Register Number</option>
-  </select>
+<select id="registerNumber">
+  <option value="" disabled selected>Select your Register Number</option>
+</select>
 
-  <div>
-    <button onclick="checkAccess()">Submit</button>
-    <button onclick="resetForm()">Reset</button>
-  </div>
+<div>
+  <button onclick="checkAccess()">Submit</button>
+  <button onclick="resetForm()">Reset</button>
+</div>
 
-  <h3>Date of Submission: <span style="color: red;">15-03-2025</span></h3>
+<h3>Date of Submission: <span style="color: red;">07-05-2025</span></h3>
 
-  <div id="loader"></div>
-  <p id="message"></p>
+<div id="loader"></div>
+<p id="message"></p>
+<button id="downloadBtn" onclick="downloadPDF()">Download PDF</button>
 
-  <!-- Download Button (Initially Hidden) -->
-  <button id="downloadBtn" onclick="downloadPDF()">Download PDF</button>
+<script>
+  // Specific 140 Register Numbers
+  const validNumbers = [
+    "22K81A7201", "22K81A7202", "22K81A7203", "22K81A7204", "22K81A7205",
+    "22K81A7206", "22K81A7207", "22K81A7208", "22K81A7209", "22K81A7210",
+    "22K81A7211", "22K81A7212", "22K81A7213", "22K81A7214", "22K81A7215",
+    "22K81A7216", "22K81A7217", "22K81A7218", "22K81A7219", "22K81A7220",
+    "22K81A7221", "22K81A7222", "22K81A7223", "22K81A7224", "22K81A7225",
+    "22K81A7226", "22K81A7227", "22K81A7228", "22K81A7229", "22K81A7230",
+    "22K81A7231", "22K81A7232", "22K81A7233", "22K81A7234", "22K81A7235", // Batch 1
+    "22K81A7236", "22K81A7237", "22K81A7238", "22K81A7239", "22K81A7240",
+    "22K81A7241", "22K81A7242", "22K81A7243", "22K81A7244", "22K81A7245",
+    "22K81A7246", "22K81A7247", "22K81A7248", "22K81A7249", "22K81A7250",
+    "22K81A7251", "22K81A7252", "22K81A7253", "22K81A7254", "22K81A7255",
+    "22K81A7256", "22K81A7257", "22K81A7258", "22K81A7259", "22K81A7260",
+    "22K81A7261", "22K81A7262", "22K81A7263", "22K81A7264", "22K81A7265",
+    "22K81A7266", "22K81A7267", "22K81A7268", "22K81A7269", "22K81A7270", // Batch 2
+    "22K81A7271", "22K81A7272", "22K81A7273", "22K81A7274", "22K81A7275",
+    "22K81A7276", "22K81A7277", "22K81A7278", "22K81A7279", "22K81A7280",
+    "22K81A7281", "22K81A7282", "22K81A7283", "22K81A7284", "22K81A7285",
+    "22K81A7286", "22K81A7287", "22K81A7288", "22K81A7289", "22K81A7290",
+    "22K81A7291", "22K81A7292", "22K81A7293", "22K81A7294", "22K81A7295",
+    "22K81A7296", "22K81A7297", "22K81A7298", "22K81A7299", "22K81A72A0",
+    "22K81A72A1", "22K81A72A2", "22K81A72A3", "22K81A72A4", "22K81A72A5", // Batch 3
+    "22K81A72A6", "22K81A72A7", "22K81A72A8", "22K81A72A9", "22K81A72B0",
+    "22K81A72B1", "22K81A72B2", "22K81A72B3", "22K81A72B4", "22K81A72B5",
+    "22K81A72B6", "22K81A72B7", "22K81A72B8", "22K81A72B9", "22K81A72C0",
+    "22K81A72C1", "22K81A72C2", "22K81A72C3", "22K81A72C4", "22K81A72C5",
+    "22K81A72C6", "22K81A72C7", "22K81A72C8", "22K81A72C9", "22K81A72D0",
+    "22K81A72D1", "22K81A72D2", "22K81A72D3", "22K81A72D4", "22K81A72D5",
+    "22K81A72D6", "22K81A72D7", "22K81A72D8", "22K81A72D9", "22K81A72E0"  // Batch 4
+  ];
 
-  <script>
-    const validNumbers = [
-      "22K81A7201", "22K81A7202", "22K81A7203", "22K81A7204", "22K81A7205",
-      "22K81A7206", "22K81A7207", "22K81A7208", "22K81A7209", "22K81A7210",
-      "22K81A7211", "22K81A7212", "22K81A7213", "22K81A7214", "22K81A7215",
-      "22K81A7216", "22K81A7217", "22K81A7218", "22K81A7219", "22K81A7220",
-      "22K81A7221", "22K81A7222", "22K81A7223", "22K81A7224", "22K81A7225",
-      "22K81A7226", "22K81A7227", "22K81A7228", "22K81A7229", "22K81A7230",
-      "22K81A7231", "22K81A7232", "22K81A7233", "22K81A7234", "22K81A7235",
-      "22K81A7236", "22K81A7237", "22K81A7238", "22K81A7239", "22K81A7240",
-      "22K81A7241", "22K81A7242", "22K81A7243", "22K81A7244", "22K81A7245",
-      "22K81A7246", "22K81A7247", "22K81A7248", "22K81A7249", "22K81A7250",
-      "22K81A7251", "22K81A7252", "22K81A7253", "22K81A7254", "22K81A7255",
-      "22K81A7256", "22K81A7257", "22K81A7258", "22K81A7259", "22K81A7260",
-      "22K81A7261", "22K81A7262", "22K81A7263", "22K81A7264", "23K85A7201", 
-      "23K85A7202", "23K85A7203", "23K85A7204", "23K85A7205", "23K85A7206"
-    ];
+  const selectBox = document.getElementById("registerNumber");
+  const downloadBtn = document.getElementById("downloadBtn");
+  let selectedPDF = "";
 
-    const selectBox = document.getElementById("registerNumber");
-    const downloadBtn = document.getElementById("downloadBtn");
+  // Populate dropdown
+  validNumbers.forEach(num => {
+    const option = document.createElement("option");
+    option.value = num;
+    option.textContent = num;
+    selectBox.appendChild(option);
+  });
 
-    // Populate dropdown
-    validNumbers.forEach(num => {
-      const option = document.createElement("option");
-      option.value = num;
-      option.textContent = num;
-      selectBox.appendChild(option);
-    });
+  function checkAccess() {
+    const selected = selectBox.value;
+    const message = document.getElementById("message");
+    const loader = document.getElementById("loader");
 
-    function checkAccess() {
-      const selected = selectBox.value;
-      const message = document.getElementById("message");
-      const loader = document.getElementById("loader");
+    const today = new Date();
+    const deadline = new Date("2025-05-07");
 
-      // Date restriction
-      const today = new Date();
-      const deadline = new Date("2025-05-15");
-      if (today > deadline) {
-        message.textContent = "Access denied. The deadline has passed.";
-        message.style.color = "red";
-        return;
-      }
-
-      if (validNumbers.includes(selected)) {
-        loader.style.display = "block";
-        message.style.color = "green";
-
-        // Local storage counter
-        let count = localStorage.getItem(selected) || 0;
-        count = parseInt(count, 10);
-
-        if (count >= 3) {
-          message.textContent = "You have reached the maximum download limit (3 times). Access denied.";
-          message.style.color = "red";
-          loader.style.display = "none";
-          downloadBtn.style.display = "none"; // Hide download button
-          return;
-        }
-
-        count++;
-        localStorage.setItem(selected, count);
-
-        message.textContent = `Access granted! You have accessed this ${count} time(s). You can now download the PDF.`;
-        downloadBtn.style.display = "inline-block"; // Show download button
-
-        setTimeout(() => {
-          loader.style.display = "none";
-        }, 1000);
-      } else {
-        message.textContent = "Please select a valid Register Number.";
-        message.style.color = "red";
-        loader.style.display = "none";
-        downloadBtn.style.display = "none"; // Hide download button
-      }
+    if (today > deadline) {
+      message.textContent = "Access denied. The deadline has passed.";
+      message.style.color = "red";
+      return;
     }
 
-    function resetForm() {
-      selectBox.selectedIndex = 0;
-      document.getElementById("message").textContent = "";
-      document.getElementById("loader").style.display = "none";
-      downloadBtn.style.display = "none"; // Hide download button
+    if (!selected) {
+      message.textContent = "Please select your register number.";
+      message.style.color = "red";
+      return;
     }
 
-    function downloadPDF() {
-      const pdfLink = "MLAssignment1.pdf";
-      const a = document.createElement('a');
-      a.href = pdfLink;
-      a.download = "MLAssignment1.pdf"; // Set download file name
-      a.click();
+    const index = validNumbers.indexOf(selected);
+    if (index === -1) {
+      message.textContent = "Invalid register number.";
+      message.style.color = "red";
+      return;
     }
-  </script>
+
+    loader.style.display = "block";
+    message.textContent = "Access granted. Your assignment is ready.";
+    message.style.color = "green";
+
+    const batch = Math.floor(index / 35) + 1;
+    selectedPDF = `batch${batch}.pdf`;
+
+    setTimeout(() => {
+      loader.style.display = "none";
+      downloadBtn.style.display = "inline-block";
+    }, 1000);
+  }
+
+  function resetForm() {
+    selectBox.selectedIndex = 0;
+    document.getElementById("message").textContent = "";
+    document.getElementById("loader").style.display = "none";
+    downloadBtn.style.display = "none";
+  }
+
+  function downloadPDF() {
+    if (selectedPDF) {
+      window.open(selectedPDF, "_blank");
+    }
+  }
+</script>
+
 </body>
 </html>
+
